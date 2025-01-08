@@ -42,7 +42,7 @@ if selected_menu == "Beranda":
         Selamat datang di aplikasi analisis data cuaca. Di sini, Anda dapat mengeksplorasi data cuaca, 
         memvisualisasikan tren, dan menganalisis model menggunakan berbagai metode yang menarik.
     """)
-    st.image("https://source.unsplash.com/800x400/?weather", caption="Weather Insights", use_container_width=True)
+    st.image("images.jpg", caption="Weather Insights", use_container_width=True)
 
 elif selected_menu == "Dataset":
     st.title("Dataset")
