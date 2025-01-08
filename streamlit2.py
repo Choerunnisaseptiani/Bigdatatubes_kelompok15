@@ -89,12 +89,18 @@ elif selected_menu == "Evaluasi Model":
         accuracy = accuracy_score(y_test, predictions)
         st.write(f"### Akurasi: {accuracy:.2f}")
 
-        st.write("### Laporan Klasifikasi:")
-        # Menyesuaikan jika jumlah kelas yang ditemukan berbeda dengan target_names
-        unique_classes = label_encoder.classes_
-        if len(unique_classes) == len(set(y_test)):
-            report = classification_report(y_test, predictions, target_names=unique_classes, zero_division=0)
-            st.text(report)
+       # Memperbaiki penggunaan classification_report
+st.write("### Laporan Klasifikasi:")
+unique_classes_in_test = sorted(set(y_test))  # Kelas yang ada di y_test
+report = classification_report(
+    y_test, 
+    predictions, 
+    target_names=label_encoder.classes_,  # Semua kelas yang ada di data awal
+    labels=unique_classes_in_test,  # Hanya kelas yang ada di y_test
+    zero_division=0
+)
+st.text(report)
+
         else:
             st.error("Jumlah kelas di 'y_test' tidak cocok dengan jumlah target_names. Pastikan label encoding sudah benar.")
 
