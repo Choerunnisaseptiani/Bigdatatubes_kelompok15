@@ -90,8 +90,8 @@ elif selected_menu == "Evaluasi Model":
         st.write(f"### Akurasi: {accuracy:.2f}")
 
         st.write("### Laporan Klasifikasi:")
-        # Pass the decoded class names here
-        report = classification_report(y_test, predictions, target_names=label_encoder.classes_)
+        # Pass the class labels explicitly to avoid mismatch
+        report = classification_report(y_test, predictions, target_names=label_encoder.classes_, zero_division=0)
         st.text(report)
 
         st.subheader("Pentingnya Fitur")
