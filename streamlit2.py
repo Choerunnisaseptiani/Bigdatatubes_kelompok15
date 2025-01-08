@@ -38,7 +38,7 @@ selected_menu = st.sidebar.radio("Pilih Halaman", menu_options)
 
 if selected_menu == "Beranda":
     st.title("☀️ Analisis Data Cuaca")
-    st.write("""
+    st.write(""" 
         Selamat datang di aplikasi analisis data cuaca. Di sini, Anda dapat mengeksplorasi data cuaca, 
         memvisualisasikan tren, dan menganalisis model menggunakan berbagai metode yang menarik.
     """)
@@ -74,9 +74,9 @@ elif selected_menu == "Evaluasi Model":
         y = data['Description']
 
         label_encoder = LabelEncoder()
-        y = label_encoder.fit_transform(y)
+        y_encoded = label_encoder.fit_transform(y)  # Encode labels
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42)
 
         model = DecisionTreeClassifier()
         model.fit(X_train, y_train)
@@ -90,6 +90,7 @@ elif selected_menu == "Evaluasi Model":
         st.write(f"### Akurasi: {accuracy:.2f}")
 
         st.write("### Laporan Klasifikasi:")
+        # Pass the decoded class names here
         report = classification_report(y_test, predictions, target_names=label_encoder.classes_)
         st.text(report)
 
