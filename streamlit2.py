@@ -89,20 +89,17 @@ elif selected_menu == "Evaluasi Model":
         accuracy = accuracy_score(y_test, predictions)
         st.write(f"### Akurasi: {accuracy:.2f}")
 
-       # Memperbaiki penggunaan classification_report
-st.write("### Laporan Klasifikasi:")
-unique_classes_in_test = sorted(set(y_test))  # Kelas yang ada di y_test
-report = classification_report(
-    y_test, 
-    predictions, 
-    target_names=label_encoder.classes_,  # Semua kelas yang ada di data awal
-    labels=unique_classes_in_test,  # Hanya kelas yang ada di y_test
-    zero_division=0
-)
-st.text(report)
-
-        else:
-            st.error("Jumlah kelas di 'y_test' tidak cocok dengan jumlah target_names. Pastikan label encoding sudah benar.")
+        # Memperbaiki penggunaan classification_report
+        st.write("### Laporan Klasifikasi:")
+        unique_classes_in_test = sorted(set(y_test))  # Kelas yang ada di y_test
+        report = classification_report(
+            y_test, 
+            predictions, 
+            target_names=label_encoder.classes_,  # Semua kelas yang ada di data awal
+            labels=unique_classes_in_test,  # Hanya kelas yang ada di y_test
+            zero_division=0
+        )
+        st.text(report)
 
         st.subheader("Pentingnya Fitur")
         importance = model.feature_importances_
