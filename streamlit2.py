@@ -17,13 +17,20 @@ sns.set(style="whitegrid")
 def load_data():
     try:
         data = pd.read_csv("top100cities_weather_data.csv")
+        
+        # Menangani nilai NaN dengan mengisi dengan rata-rata untuk kolom numerik dan modus untuk kolom non-numerik
         numeric_cols = data.select_dtypes(include=['number']).columns
         data[numeric_cols] = data[numeric_cols].fillna(data[numeric_cols].mean())
+        
         non_numeric_cols = data.select_dtypes(exclude=['number']).columns
         data[non_numeric_cols] = data[non_numeric_cols].fillna(data[non_numeric_cols].mode().iloc[0])
+        
         return data
     except FileNotFoundError:
         st.error("File 'top100cities_weather_data.csv' tidak ditemukan. Pastikan file tersedia di direktori.")
+        return None
+    except Exception as e:
+        st.error(f"Terjadi kesalahan saat memuat data: {e}")
         return None
 
 # Muat dataset
@@ -55,10 +62,13 @@ elif selected_menu == "Visualisasi":
     st.title("Visualisasi Data")
     numeric_features = data.select_dtypes(include=['number']).columns
     selected_feature = st.selectbox("Pilih Fitur untuk Visualisasi", numeric_features)
+    
+    # Visualisasi distribusi data
     st.subheader(f"Distribusi {selected_feature}")
     fig = px.histogram(data, x=selected_feature, nbins=20, title=f"Histogram {selected_feature}", color_discrete_sequence=['#636EFA'])
     st.plotly_chart(fig, use_container_width=True)
 
+    # Visualisasi distribusi berdasarkan negara (jika ada kolom 'Country')
     if 'Country' in data.columns:
         st.subheader("Distribusi Berdasarkan Negara")
         fig = px.box(data, x='Country', y=selected_feature, color='Country', title=f"Distribusi {selected_feature} Berdasarkan Negara")
@@ -69,31 +79,38 @@ elif selected_menu == "Evaluasi Model":
     if 'Description' not in data.columns:
         st.error("Kolom 'Description' tidak ditemukan pada dataset. Tidak dapat melatih model.")
     else:
+        # Memilih fitur dan label
         features = ['Temperature (Celsius)', 'Wind Speed (m/s)', 'Latitude', 'Longitude']
         X = data[features]
         y = data['Description']
 
+        # Encoding label
         label_encoder = LabelEncoder()
         y_encoded = label_encoder.fit_transform(y)  # Encode labels
 
+        # Pembagian data training dan testing
         X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42)
 
-        model = DecisionTreeClassifier()
+        # Melatih model
+        model = DecisionTreeClassifier(random_state=42)
         model.fit(X_train, y_train)
         predictions = model.predict(X_test)
 
+        # Matriks kebingungannya
         cm = confusion_matrix(y_test, predictions)
         fig = px.imshow(cm, text_auto=True, title="Confusion Matrix", color_continuous_scale="Blues")
         st.plotly_chart(fig, use_container_width=True)
 
+        # Akurasi model
         accuracy = accuracy_score(y_test, predictions)
         st.write(f"### Akurasi: {accuracy:.2f}")
 
+        # Laporan klasifikasi
         st.write("### Laporan Klasifikasi:")
-        # Pass the class labels explicitly to avoid mismatch
         report = classification_report(y_test, predictions, target_names=label_encoder.classes_, zero_division=0)
         st.text(report)
 
+        # Pentingnya fitur
         st.subheader("Pentingnya Fitur")
         importance = model.feature_importances_
         feature_imp = pd.DataFrame(importance, index=features, columns=["Penting"]).sort_values(by="Penting", ascending=False)
@@ -102,6 +119,7 @@ elif selected_menu == "Evaluasi Model":
 elif selected_menu == "Word Cloud":
     st.title("Word Cloud")
     if 'Country' in data.columns and 'Description' in data.columns:
+        # Wordcloud untuk negara
         country_counts = data['Country'].value_counts()
         wordcloud_country = WordCloud(width=800, height=400, background_color="white", colormap="viridis").generate_from_frequencies(country_counts)
         st.subheader("Word Cloud - Negara")
@@ -110,6 +128,7 @@ elif selected_menu == "Word Cloud":
         ax.axis("off")
         st.pyplot(fig)
 
+        # Wordcloud untuk deskripsi cuaca
         description_counts = data['Description'].value_counts()
         wordcloud_description = WordCloud(width=800, height=400, background_color="white", colormap="magma").generate_from_frequencies(description_counts)
         st.subheader("Word Cloud - Deskripsi Cuaca")
