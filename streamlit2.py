@@ -7,7 +7,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from wordcloud import WordCloud
-import os
+import plotly.express as px
 
 # Set page configuration
 st.set_page_config(page_title="Weather Data Analysis", layout="wide")
@@ -32,14 +32,23 @@ if data is None:
     st.stop()
 
 # Sidebar untuk navigasi
-st.sidebar.title("Menu Navigasi")
-menu_options = ["Dataset", "Visualisasi", "Model Evaluasi", "Word Cloud"]
-selected_menu = st.sidebar.selectbox("Pilih Halaman", menu_options)
+st.sidebar.title("\ud83c\udf0d Menu Navigasi")
+menu_options = ["Beranda", "Dataset", "Visualisasi", "Model Evaluasi", "Word Cloud"]
+selected_menu = st.sidebar.radio("Pilih Halaman", menu_options)
 
-if selected_menu == "Dataset":
+if selected_menu == "Beranda":
+    st.title("\u2600\ufe0f Weather Data Analysis")
+    st.write(
+        "Selamat datang di aplikasi analisis data cuaca. Di sini, Anda dapat mengeksplorasi data cuaca, memvisualisasikan tren, 
+        mengevaluasi model prediksi, dan membuat analisis data yang menarik menggunakan visualisasi yang interaktif."
+    )
+    st.image("https://source.unsplash.com/800x400/?weather", caption="Weather Insights", use_column_width=True)
+
+elif selected_menu == "Dataset":
     st.title("Dataset")
     st.write("### Tampilkan Dataset")
     st.write(data)
+
     st.write("Jumlah nilai NaN setelah diatasi:")
     st.write(data.isnull().sum())
 
@@ -48,15 +57,12 @@ elif selected_menu == "Visualisasi":
 
     selected_feature = st.selectbox("Pilih Fitur untuk Visualisasi", ["Temperature (Celsius)", "Wind Speed (m/s)"])
     st.subheader(f"Distribusi {selected_feature}")
-    fig, ax = plt.subplots(figsize=(12, 6))
-    sns.histplot(data[selected_feature], kde=True, ax=ax, color="skyblue", bins=20)
-    st.pyplot(fig)
+    fig = px.histogram(data, x=selected_feature, nbins=20, title=f"Histogram {selected_feature}", color_discrete_sequence=['#636EFA'])
+    st.plotly_chart(fig, use_container_width=True)
 
     st.subheader("Distribusi Kecepatan Angin Berdasarkan Negara")
-    fig, ax = plt.subplots(figsize=(14, 8))
-    sns.boxplot(x='Country', y='Wind Speed (m/s)', data=data, ax=ax, palette="Set2")
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment="right")
-    st.pyplot(fig)
+    fig = px.box(data, x='Country', y='Wind Speed (m/s)', color='Country', title="Distribusi Berdasarkan Negara")
+    st.plotly_chart(fig, use_container_width=True)
 
 elif selected_menu == "Model Evaluasi":
     st.title("Evaluasi Model")
@@ -75,15 +81,13 @@ elif selected_menu == "Model Evaluasi":
     predictions = model.predict(X_test)
 
     cm = confusion_matrix(y_test, predictions)
-    fig, ax = plt.subplots(figsize=(8, 6))
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=ax, cbar=False, annot_kws={"size": 12})
-    plt.title('Confusion Matrix', fontsize=16)
-    st.pyplot(fig)
+    fig = px.imshow(cm, text_auto=True, title="Confusion Matrix", color_continuous_scale="Blues")
+    st.plotly_chart(fig, use_container_width=True)
 
     accuracy = accuracy_score(y_test, predictions)
     st.write(f"### Accuracy: {accuracy:.2f}")
-    st.write("### Classification Report:")
 
+    st.write("### Classification Report:")
     target_names = label_encoder.inverse_transform(sorted(set(y_test).union(set(predictions))))
     report = classification_report(
         label_encoder.inverse_transform(y_test),
@@ -95,7 +99,7 @@ elif selected_menu == "Model Evaluasi":
     st.subheader("Feature Importance")
     importance = model.feature_importances_
     feature_imp = pd.DataFrame(importance, index=features, columns=["Importance"]).sort_values(by="Importance", ascending=False)
-    st.write(feature_imp)
+    st.dataframe(feature_imp.style.background_gradient(cmap="Blues"))
 
 elif selected_menu == "Word Cloud":
     st.title("Word Cloud")
