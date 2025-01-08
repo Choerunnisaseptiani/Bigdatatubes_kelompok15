@@ -42,7 +42,7 @@ if selected_menu == "Beranda":
         Selamat datang di aplikasi analisis data cuaca. Di sini, Anda dapat mengeksplorasi data cuaca, 
         memvisualisasikan tren, dan menganalisis model menggunakan berbagai metode yang menarik.
     """)
-    st.image("https://source.unsplash.com/800x400/?weather", caption="Weather Insights", use_column_width=True)
+    st.image("https://source.unsplash.com/800x400/?weather", caption="Weather Insights", use_container_width=True)
 
 elif selected_menu == "Dataset":
     st.title("Dataset")
@@ -90,7 +90,7 @@ elif selected_menu == "Evaluasi Model":
         st.write(f"### Akurasi: {accuracy:.2f}")
 
         # Memperbaiki penggunaan classification_report
-        st.write("### Laporan Klasifikasi:")
+        st.write("### Classification Report:")
         unique_classes_in_test = sorted(set(y_test))  # Kelas yang ada di y_test
         report = classification_report(
             y_test, 
