@@ -38,10 +38,11 @@ selected_menu = st.sidebar.radio("Pilih Halaman", menu_options)
 
 if selected_menu == "Beranda":
     st.title("\u2600\ufe0f Weather Data Analysis")
-    st.write(
-        "Selamat datang di aplikasi analisis data cuaca. Di sini, Anda dapat mengeksplorasi data cuaca, memvisualisasikan tren, 
-        mengevaluasi model prediksi, dan membuat analisis data yang menarik menggunakan visualisasi yang interaktif."
-    )
+   st.write("""
+Selamat datang di aplikasi analisis data cuaca. Di sini, Anda dapat mengeksplorasi data cuaca, 
+memvisualisasikan tren, dan menganalisis model menggunakan berbagai metode yang menarik.
+""")
+
     st.image("https://source.unsplash.com/800x400/?weather", caption="Weather Insights", use_column_width=True)
 
 elif selected_menu == "Dataset":
