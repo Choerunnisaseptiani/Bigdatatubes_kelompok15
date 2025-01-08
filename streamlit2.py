@@ -32,16 +32,16 @@ if data is None:
     st.stop()
 
 # Sidebar untuk navigasi
-st.sidebar.title("\ud83c\udf0d Menu Navigasi")
+st.sidebar.title("🌍 Menu Navigasi")
 menu_options = ["Beranda", "Dataset", "Visualisasi", "Model Evaluasi", "Word Cloud"]
 selected_menu = st.sidebar.radio("Pilih Halaman", menu_options)
 
 if selected_menu == "Beranda":
-    st.title("\u2600\ufe0f Weather Data Analysis")
-  st.write("""
-Selamat datang di aplikasi analisis data cuaca. Di sini, Anda dapat mengeksplorasi data cuaca, 
-memvisualisasikan tren, dan menganalisis model menggunakan berbagai metode yang menarik.
-""")
+    st.title("☀️ Weather Data Analysis")
+    st.write("""
+        Selamat datang di aplikasi analisis data cuaca. Di sini, Anda dapat mengeksplorasi data cuaca, 
+        memvisualisasikan tren, dan menganalisis model menggunakan berbagai metode yang menarik.
+    """)
 
     st.image("https://source.unsplash.com/800x400/?weather", caption="Weather Insights", use_column_width=True)
 
@@ -89,12 +89,7 @@ elif selected_menu == "Model Evaluasi":
     st.write(f"### Accuracy: {accuracy:.2f}")
 
     st.write("### Classification Report:")
-    target_names = label_encoder.inverse_transform(sorted(set(y_test).union(set(predictions))))
-    report = classification_report(
-        label_encoder.inverse_transform(y_test),
-        label_encoder.inverse_transform(predictions),
-        target_names=target_names
-    )
+    report = classification_report(y_test, predictions, target_names=label_encoder.classes_)
     st.text(report)
 
     st.subheader("Feature Importance")
