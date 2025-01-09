@@ -93,9 +93,14 @@ elif selected_menu == "Evaluasi Model":
         model.fit(X_train, y_train)
         predictions = model.predict(X_test)
 
-        # Ensure label consistency
+        # Ensure label consistency and remove any NaN values
         y_test_labels = label_encoder.inverse_transform(y_test)
         predictions_labels = label_encoder.inverse_transform(predictions)
+
+        # Handle missing or invalid labels
+        valid_labels = set(y_test_labels) & set(predictions_labels)
+        y_test_labels = [label for label in y_test_labels if label in valid_labels]
+        predictions_labels = [label for label in predictions_labels if label in valid_labels]
 
         # Confusion matrix
         cm = confusion_matrix(y_test_labels, predictions_labels)
