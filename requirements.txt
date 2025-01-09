@@ -2,7 +2,6 @@ seaborn
 scikit-learn
 WordCloud
 plotly.express
-json
 requests
 st_lottie
 streamlit-lottie==0.0.2
