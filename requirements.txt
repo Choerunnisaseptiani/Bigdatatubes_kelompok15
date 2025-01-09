@@ -5,3 +5,5 @@ plotly.express
 json
 requests
 st_lottie
+streamlit-lottie==0.0.2
+requests
