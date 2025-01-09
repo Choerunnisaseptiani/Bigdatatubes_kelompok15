@@ -4,3 +4,4 @@ WordCloud
 plotly.express
 json
 requests
+st_lottie
