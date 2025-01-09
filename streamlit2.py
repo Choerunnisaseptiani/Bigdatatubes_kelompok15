@@ -8,7 +8,20 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from wordcloud import WordCloud
 import plotly.express as px
+mport streamlit as st
 
+# Sidebar for navigation with emojis as icons
+st.sidebar.title("📚 Menu Navigasi")  # You can add an emoji to the sidebar title
+
+menu_options = {
+    "Beranda": "🏠",
+    "Dataset": "📊",
+    "Visualisasi": "📉",
+    "Evaluasi Model": "🔬",
+    "Word Cloud": "🧠"
+}
+
+selected_menu = st.sidebar.radio("Pilih Halaman", list(menu_options.keys()), format_func=lambda x: f"{menu_options[x]} {x}")
 # Konfigurasi halaman
 st.set_page_config(page_title="Analisis Data Cuaca", layout="wide")
 sns.set(style="whitegrid")
