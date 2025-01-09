@@ -105,20 +105,28 @@ elif selected_menu == "Evaluasi Model":
         if len(y_test_labels) != len(predictions_labels):
             st.error("Mismatch in the lengths of y_test_labels and predictions_labels.")
         else:
-            # Confusion matrix
-            cm = confusion_matrix(y_test_labels, predictions_labels)
-            st.markdown("### Confusion Matrix:")
-            fig = px.imshow(cm, text_auto=True, title="Confusion Matrix", color_continuous_scale="Blues")
-            st.plotly_chart(fig, use_container_width=True)
+            # Check for unique values in both arrays
+            st.write("Unique values in y_test_labels:", set(y_test_labels))
+            st.write("Unique values in predictions_labels:", set(predictions_labels))
 
-            # Accuracy
-            accuracy = accuracy_score(y_test_labels, predictions_labels)
-            st.markdown(f"### Akurasi Model: **{accuracy:.2f}**")
+            # If there are missing labels, alert the user
+            if set(y_test_labels) != set(predictions_labels):
+                st.error("Mismatch in class labels between true values and predictions.")
+            else:
+                # Confusion matrix
+                cm = confusion_matrix(y_test_labels, predictions_labels)
+                st.markdown("### Confusion Matrix:")
+                fig = px.imshow(cm, text_auto=True, title="Confusion Matrix", color_continuous_scale="Blues")
+                st.plotly_chart(fig, use_container_width=True)
 
-            # Classification report
-            st.markdown("### Laporan Klasifikasi:")
-            report = classification_report(y_test_labels, predictions_labels, target_names=label_encoder.classes_, zero_division=0)
-            st.text(report)
+                # Accuracy
+                accuracy = accuracy_score(y_test_labels, predictions_labels)
+                st.markdown(f"### Akurasi Model: **{accuracy:.2f}**")
+
+                # Classification report
+                st.markdown("### Laporan Klasifikasi:")
+                report = classification_report(y_test_labels, predictions_labels, target_names=label_encoder.classes_, zero_division=0)
+                st.text(report)
 
 elif selected_menu == "Word Cloud":
     st.title("Word Cloud")
