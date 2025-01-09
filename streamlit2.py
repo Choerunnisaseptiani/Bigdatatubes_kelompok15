@@ -46,10 +46,19 @@ if selected_menu == "Beranda":
 
 elif selected_menu == "Dataset":
     st.title("Dataset")
-    st.write("### Dataset Lengkap")
-    st.write(data)
-    st.write("### Jumlah nilai NaN setelah diatasi:")
-    st.write(data.isnull().sum())
+    st.markdown("### Unggah Dataset Anda:")
+    uploaded_file = st.file_uploader("Unggah file CSV", type="csv")
+    if uploaded_file:
+        data = pd.read_csv(uploaded_file)
+        st.success("Dataset berhasil diunggah!")
+    if data is not None:
+        st.write(data.head())
+        st.markdown("### Info Dataset:")
+        st.write(data.info())
+        st.markdown("### Jumlah nilai kosong (NaN):")
+        st.write(data.isnull().sum())
+    else:
+        st.warning("Belum ada dataset yang dimuat.")
 
 elif selected_menu == "Visualisasi":
     st.title("Visualisasi Data")
