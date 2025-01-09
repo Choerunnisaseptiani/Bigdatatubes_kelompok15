@@ -1,8 +1,7 @@
+streamlit
 seaborn
 scikit-learn
-WordCloud
-plotly.express
-requests
-st_lottie
-streamlit-lottie==0.0.2
+wordcloud
+plotly
+streamlit-lottie
 requests
