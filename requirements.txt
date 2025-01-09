@@ -2,3 +2,5 @@ seaborn
 scikit-learn
 WordCloud
 plotly.express
+json
+requests
