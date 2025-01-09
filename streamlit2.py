@@ -8,10 +8,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from wordcloud import WordCloud
 import plotly.express as px
-
-# Konfigurasi halaman
-st.set_page_config(page_title="Analisis Data Cuaca", layout="wide", page_icon="🌤️")
-sns.set(style="whitegrid")
+import requests
 
 # Fungsi untuk memuat dataset
 def load_data():
@@ -26,6 +23,10 @@ def load_data():
         st.error("File 'top100cities_weather_data.csv' tidak ditemukan.")
         return None
 
+# Konfigurasi halaman
+st.set_page_config(page_title="Analisis Data Cuaca", layout="wide", page_icon="🌤️")
+sns.set(style="whitegrid")
+
 # Muat dataset
 data = load_data()
 
@@ -36,11 +37,8 @@ selected_menu = st.sidebar.radio("Pilih Halaman", menu_options)
 
 if selected_menu == "Beranda":
     st.title("🌤️ Analisis Data Cuaca")
-    st.markdown(""" 
-        **Aplikasi ini membantu Anda memahami data cuaca dengan cara yang interaktif dan menarik.**  
-        Jelajahi dataset, buat visualisasi, evaluasi model prediktif, dan temukan pola cuaca menggunakan Word Cloud!
-    """)
-    st.image("https://via.placeholder.com/800x300?text=Analisis+Data+Cuaca", caption="Gambaran Analisis Cuaca")
+    st.markdown("""**Aplikasi ini membantu Anda memahami data cuaca dengan cara yang interaktif dan menarik.**  
+    Jelajahi dataset, buat visualisasi, evaluasi model prediktif, dan temukan pola cuaca menggunakan Word Cloud!""")
 
 elif selected_menu == "Dataset":
     st.title("Dataset")
@@ -83,25 +81,35 @@ elif selected_menu == "Evaluasi Model":
         X = data[features]
         y = data['Description']
 
+        # Label encoding
         label_encoder = LabelEncoder()
         y_encoded = label_encoder.fit_transform(y)
 
+        # Train/test split
         X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42)
 
+        # Model training
         model = DecisionTreeClassifier()
         model.fit(X_train, y_train)
         predictions = model.predict(X_test)
 
-        cm = confusion_matrix(y_test, predictions)
+        # Ensure label consistency
+        y_test_labels = label_encoder.inverse_transform(y_test)
+        predictions_labels = label_encoder.inverse_transform(predictions)
+
+        # Confusion matrix
+        cm = confusion_matrix(y_test_labels, predictions_labels)
         st.markdown("### Confusion Matrix:")
         fig = px.imshow(cm, text_auto=True, title="Confusion Matrix", color_continuous_scale="Blues")
         st.plotly_chart(fig, use_container_width=True)
 
-        accuracy = accuracy_score(y_test, predictions)
+        # Accuracy
+        accuracy = accuracy_score(y_test_labels, predictions_labels)
         st.markdown(f"### Akurasi Model: **{accuracy:.2f}**")
 
+        # Classification report
         st.markdown("### Laporan Klasifikasi:")
-        report = classification_report(y_test, predictions, target_names=label_encoder.classes_, zero_division=0)
+        report = classification_report(y_test_labels, predictions_labels, target_names=label_encoder.classes_, zero_division=0)
         st.text(report)
 
 elif selected_menu == "Word Cloud":
