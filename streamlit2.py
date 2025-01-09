@@ -8,21 +8,6 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from wordcloud import WordCloud
 import plotly.express as px
-from streamlit_lottie import st_lottie
-import json
-import requests
-
-# Fungsi untuk memuat animasi Lottie
-def load_lottieurl(url):
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
-
-# Animasi
-lottie_weather = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_yk6gfqv2.json")
-lottie_analysis = load_lottieurl("https://assets5.lottiefiles.com/private_files/lf30_ysxlbrsy.json")
 
 # Konfigurasi halaman
 st.set_page_config(page_title="Analisis Data Cuaca", layout="wide", page_icon="🌤️")
@@ -51,11 +36,11 @@ selected_menu = st.sidebar.radio("Pilih Halaman", menu_options)
 
 if selected_menu == "Beranda":
     st.title("🌤️ Analisis Data Cuaca")
-    st.markdown("""
+    st.markdown(""" 
         **Aplikasi ini membantu Anda memahami data cuaca dengan cara yang interaktif dan menarik.**  
         Jelajahi dataset, buat visualisasi, evaluasi model prediktif, dan temukan pola cuaca menggunakan Word Cloud!
     """)
-    st_lottie(lottie_weather, height=300, key="weather-animation")
+    st.image("https://via.placeholder.com/800x300?text=Analisis+Data+Cuaca", caption="Gambaran Analisis Cuaca")
 
 elif selected_menu == "Dataset":
     st.title("Dataset")
@@ -91,7 +76,6 @@ elif selected_menu == "Visualisasi":
 
 elif selected_menu == "Evaluasi Model":
     st.title("Evaluasi Model")
-    st_lottie(lottie_analysis, height=300, key="analysis-animation")
     if 'Description' not in data.columns:
         st.error("Kolom 'Description' tidak ditemukan. Tidak dapat melatih model.")
     else:
