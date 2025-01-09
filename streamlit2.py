@@ -97,25 +97,28 @@ elif selected_menu == "Evaluasi Model":
         y_test_labels = label_encoder.inverse_transform(y_test)
         predictions_labels = label_encoder.inverse_transform(predictions)
 
-        # Handle missing or invalid labels
-        valid_labels = set(y_test_labels) & set(predictions_labels)
-        y_test_labels = [label for label in y_test_labels if label in valid_labels]
-        predictions_labels = [label for label in predictions_labels if label in valid_labels]
+        # Check lengths before passing to confusion_matrix
+        st.write(f"Length of y_test_labels: {len(y_test_labels)}")
+        st.write(f"Length of predictions_labels: {len(predictions_labels)}")
 
-        # Confusion matrix
-        cm = confusion_matrix(y_test_labels, predictions_labels)
-        st.markdown("### Confusion Matrix:")
-        fig = px.imshow(cm, text_auto=True, title="Confusion Matrix", color_continuous_scale="Blues")
-        st.plotly_chart(fig, use_container_width=True)
+        # Check if sizes match
+        if len(y_test_labels) != len(predictions_labels):
+            st.error("Mismatch in the lengths of y_test_labels and predictions_labels.")
+        else:
+            # Confusion matrix
+            cm = confusion_matrix(y_test_labels, predictions_labels)
+            st.markdown("### Confusion Matrix:")
+            fig = px.imshow(cm, text_auto=True, title="Confusion Matrix", color_continuous_scale="Blues")
+            st.plotly_chart(fig, use_container_width=True)
 
-        # Accuracy
-        accuracy = accuracy_score(y_test_labels, predictions_labels)
-        st.markdown(f"### Akurasi Model: **{accuracy:.2f}**")
+            # Accuracy
+            accuracy = accuracy_score(y_test_labels, predictions_labels)
+            st.markdown(f"### Akurasi Model: **{accuracy:.2f}**")
 
-        # Classification report
-        st.markdown("### Laporan Klasifikasi:")
-        report = classification_report(y_test_labels, predictions_labels, target_names=label_encoder.classes_, zero_division=0)
-        st.text(report)
+            # Classification report
+            st.markdown("### Laporan Klasifikasi:")
+            report = classification_report(y_test_labels, predictions_labels, target_names=label_encoder.classes_, zero_division=0)
+            st.text(report)
 
 elif selected_menu == "Word Cloud":
     st.title("Word Cloud")
