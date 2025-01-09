@@ -8,7 +8,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from wordcloud import WordCloud
 import plotly.express as px
-mport streamlit as st
+import streamlit as st
 
 # Sidebar for navigation with emojis as icons
 st.sidebar.title("📚 Menu Navigasi")  # You can add an emoji to the sidebar title
