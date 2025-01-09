@@ -8,10 +8,9 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from wordcloud import WordCloud
 import plotly.express as px
-import streamlit as st
 
 # Sidebar for navigation with emojis as icons
-st.sidebar.title("📚 Menu Navigasi")  # You can add an emoji to the sidebar title
+st.sidebar.title("📚 Menu Navigasi")
 
 menu_options = {
     "Beranda": "🏠",
@@ -22,11 +21,12 @@ menu_options = {
 }
 
 selected_menu = st.sidebar.radio("Pilih Halaman", list(menu_options.keys()), format_func=lambda x: f"{menu_options[x]} {x}")
-# Konfigurasi halaman
+
+# Page configuration
 st.set_page_config(page_title="Analisis Data Cuaca", layout="wide")
 sns.set(style="whitegrid")
 
-# Fungsi untuk memuat dan memproses dataset
+# Function to load and preprocess the dataset
 def load_data():
     try:
         data = pd.read_csv("top100cities_weather_data.csv")
@@ -39,16 +39,13 @@ def load_data():
         st.error("File 'top100cities_weather_data.csv' tidak ditemukan. Pastikan file tersedia di direktori.")
         return None
 
-# Muat dataset
+# Load the dataset
 data = load_data()
 if data is None:
     st.stop()
 
-# Sidebar untuk navigasi
-st.sidebar.title("🌍 Menu Navigasi")
-menu_options = ["Beranda", "Dataset", "Visualisasi", "Evaluasi Model", "Word Cloud"]
-selected_menu = st.sidebar.radio("Pilih Halaman", menu_options)
-
+# Sidebar for navigation (duplicate removed)
+# Main content based on selected menu
 if selected_menu == "Beranda":
     st.title("☀️ Analisis Data Cuaca")
     st.write(""" 
@@ -111,14 +108,14 @@ elif selected_menu == "Evaluasi Model":
         accuracy = accuracy_score(y_test, predictions)
         st.write(f"### Akurasi: {accuracy:.2f}")
 
-        # Memperbaiki penggunaan classification_report
+        # Classification Report
         st.write("### Classification Report:")
-        unique_classes_in_test = sorted(set(y_test))  # Kelas yang ada di y_test
+        unique_classes_in_test = sorted(set(y_test))  # Classes in y_test
         report = classification_report(
             y_test, 
             predictions, 
-            target_names=label_encoder.classes_,  # Semua kelas yang ada di data awal
-            labels=unique_classes_in_test,  # Hanya kelas yang ada di y_test
+            target_names=label_encoder.classes_,  # Classes from the label encoder
+            labels=unique_classes_in_test,  # Only include classes from y_test
             zero_division=0
         )
         st.text(report)
