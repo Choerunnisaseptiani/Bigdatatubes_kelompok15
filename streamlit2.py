@@ -9,6 +9,9 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from wordcloud import WordCloud
 import plotly.express as px
 
+# Page configuration (must be the first Streamlit command)
+st.set_page_config(page_title="Analisis Data Cuaca", layout="wide")
+
 # Sidebar for navigation with emojis as icons
 st.sidebar.title("📚 Menu Navigasi")
 
@@ -22,8 +25,7 @@ menu_options = {
 
 selected_menu = st.sidebar.radio("Pilih Halaman", list(menu_options.keys()), format_func=lambda x: f"{menu_options[x]} {x}")
 
-# Page configuration
-st.set_page_config(page_title="Analisis Data Cuaca", layout="wide")
+# Set style for seaborn
 sns.set(style="whitegrid")
 
 # Function to load and preprocess the dataset
@@ -44,7 +46,6 @@ data = load_data()
 if data is None:
     st.stop()
 
-# Sidebar for navigation (duplicate removed)
 # Main content based on selected menu
 if selected_menu == "Beranda":
     st.title("☀️ Analisis Data Cuaca")
